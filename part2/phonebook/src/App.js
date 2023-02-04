@@ -4,10 +4,19 @@ import Person from './components/Person'
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' , number: 1234}
-  ]) 
+    { name: 'Arto Hellas', number: '040-123456', id: 1 },
+    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
+    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
+    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
+  ])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [pattern, setPattern] = useState('')
+  let nextId = persons.length
+  const getNextId = () => {
+    nextId = nextId + 1;
+    return nextId
+  }
 
   const handleFormSubmit = (event) => {
     event.preventDefault()
@@ -16,7 +25,8 @@ const App = () => {
     } else {
       const newPerson = {
         name: newName,
-        number: newNumber
+        number: newNumber,
+        id: getNextId()
       }
       setPersons(persons.concat(newPerson))
       setNewName("")
@@ -32,9 +42,24 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
+  const handlePatternChange = (event) => {
+    setPattern(event.target.value.trim().toLowerCase())
+  }
+
+  let filteredPersons = persons
+  if (pattern) {
+    filteredPersons = persons.filter((person) => person.name.toLowerCase().includes(pattern))
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <form>
+        <div>
+          <input value={pattern} onChange={handlePatternChange} />
+        </div>
+      </form>
+      <h2>add a new</h2>
       <form onSubmit={handleFormSubmit}>
         <div>
           name: <input value={newName} onChange={handleNameChange} />
@@ -44,7 +69,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-        {persons.map(person => <Person key={person.name} person={person} />)}
+        {filteredPersons.map(person => <Person key={person.id} person={person} />)}
       </ul>
     </div>
   )
