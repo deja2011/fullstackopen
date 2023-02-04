@@ -1,6 +1,6 @@
 
 const Person = ({name}) => {
-    return <div>{name}</div>
+    return <li>{name}</li>
 }
 
 export default Person
