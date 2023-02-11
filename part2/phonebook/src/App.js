@@ -20,7 +20,7 @@ const App = () => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault()
-    if (persons.filter((person) => person.name === newName).length) {
+    if (persons.filter(person => person.name === newName).length) {
       alert(`${newName} is already added to phonebook`)
     } else {
       const newPerson = {
@@ -50,6 +50,16 @@ const App = () => {
     setPattern(event.target.value.trim().toLowerCase())
   }
 
+  const handlePersonDeleteOf = (person) => {
+    return (event) => {
+      if (window.confirm(`Delete ${person.name} ?`)) {
+        services.remove(person.id).then(data => {
+          setPersons(persons.filter(p => p.id !== person.id))
+        })
+      }
+    }
+  }
+
   useEffect(() => {
     services.getAll().then(data => setPersons(data))
   }, [])
@@ -68,7 +78,7 @@ const App = () => {
         newName={newName} newNumber={newNumber}
         handleFormSubmit={handleFormSubmit} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} />
       <h3>Numbers</h3>
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} handlePersonDeleteOf={handlePersonDeleteOf} />
     </div>
   )
 }

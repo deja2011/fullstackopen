@@ -1,6 +1,6 @@
 
-const Person = ({person}) => {
-    return <li>{person.name} {person.number}</li>
+const Person = ({person, handlePersonDelete}) => {
+    return <li>{person.name} {person.number} <button onClick={handlePersonDelete}>delete</button></li>
 }
 
 export default Person
