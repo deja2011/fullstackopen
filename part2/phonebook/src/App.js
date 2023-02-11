@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
 
-import axios from 'axios'
-
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
+import services from './services/persons'
 
 
 const App = () => {
@@ -29,7 +28,11 @@ const App = () => {
         number: newNumber,
         id: getNextId()
       }
-      setPersons(persons.concat(newPerson))
+      services.create(newPerson).then(data => {
+        setPersons(persons.concat(data));
+      }).catch(error => {
+        alert(`Failed to create new person ${newPerson}: ${error}`)
+      })
       setNewName("")
       setNewNumber("")
     }
@@ -48,11 +51,7 @@ const App = () => {
   }
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-      })
+    services.getAll().then(data => setPersons(data))
   }, [])
 
   let filteredPersons = persons
