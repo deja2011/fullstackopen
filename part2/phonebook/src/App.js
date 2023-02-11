@@ -20,8 +20,19 @@ const App = () => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault()
-    if (persons.filter(person => person.name === newName).length) {
-      alert(`${newName} is already added to phonebook`)
+    const existPersons = persons.filter(person => person.name === newName);
+    if (existPersons.length) {
+      const existPerson = existPersons[0]
+      if (window.confirm(`${existPerson} is already added to phonebook, replace the old number with a new one?`)) {
+        const newPerson = {...existPerson, number: newNumber};
+        services.update(newPerson.id, newPerson).then(data => {
+          setPersons(persons.map(p => p.id === newPerson.id ? data : p));
+        }).catch(error => {
+          alert(`Failed to update person ${newPerson}: ${error}`)
+        })
+        setNewName("")
+        setNewNumber("")
+      }
     } else {
       const newPerson = {
         name: newName,
