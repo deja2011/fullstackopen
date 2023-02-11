@@ -3,19 +3,20 @@ import { useEffect, useState } from 'react'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
+import Notification from './components/Notification'
 import services from './services/persons'
 
+import './index.css'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [pattern, setPattern] = useState('')
+  const [message, setMessage] = useState(null)
 
-  let nextId = persons.length
   const getNextId = () => {
-    nextId = nextId + 1;
-    return nextId
+    return persons.reduce((a, b) => a > b.id ? a : b.id, 0) + 1
   }
 
   const handleFormSubmit = (event) => {
@@ -27,8 +28,11 @@ const App = () => {
         const newPerson = {...existPerson, number: newNumber};
         services.update(newPerson.id, newPerson).then(data => {
           setPersons(persons.map(p => p.id === newPerson.id ? data : p));
+          setMessage({isError: false, text: `Updated person ${newPerson.name} to ${newNumber}`})
+          setTimeout(() => setMessage(null), 5000)
         }).catch(error => {
-          alert(`Failed to update person ${newPerson}: ${error}`)
+          setMessage({isError: true, text: `Failed to update person ${newPerson.name} to ${newNumber}`})
+          setTimeout(() => setMessage(null), 5000)
         })
         setNewName("")
         setNewNumber("")
@@ -41,8 +45,11 @@ const App = () => {
       }
       services.create(newPerson).then(data => {
         setPersons(persons.concat(data));
+        setMessage({isError: false, text: `Created new person ${newName}`})
+        setTimeout(() => setMessage(null), 5000)
       }).catch(error => {
-        alert(`Failed to create new person ${newPerson}: ${error}`)
+        setMessage({isError: true, text: `Failed to create new person ${newName}`})
+        setTimeout(() => setMessage(null), 5000)
       })
       setNewName("")
       setNewNumber("")
@@ -66,6 +73,12 @@ const App = () => {
       if (window.confirm(`Delete ${person.name} ?`)) {
         services.remove(person.id).then(data => {
           setPersons(persons.filter(p => p.id !== person.id))
+          setMessage({isError: false, text: `Deleted person ${person.name}`})
+          setTimeout(() => setMessage(null), 5000)
+        }).catch(error => {
+          setMessage({isError: true, text: `Failed to delete person ${person.name}`})
+          setTimeout(() => setMessage(null), 5000)
+          services.getAll().then(data => setPersons(data))
         })
       }
     }
@@ -82,6 +95,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={message} />
       <h2>Phonebook</h2>
       <Filter pattern={pattern} handlePatternChange={handlePatternChange} />
       <h3>Add a new</h3>
