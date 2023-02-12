@@ -6,8 +6,6 @@ import Filter from './components/Filter'
 import Notification from './components/Notification'
 import services from './services/persons'
 
-import './index.css'
-
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
