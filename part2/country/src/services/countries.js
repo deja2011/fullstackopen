@@ -2,12 +2,12 @@ import axios from 'axios'
 
 const baseUrl = "https://restcountries.com/v3.1"
 
-const getAll = () => {
+const getAllCountries = () => {
     return axios.get(`${baseUrl}/all`).then(response => response.data)
 }
 
 const services = {
-    getAll,
+    getAllCountries,
 }
 
 export default services
