@@ -1,6 +1,8 @@
 import axios from 'axios'
 
-const baseUrl = "/api/persons"
+const rootUrl = process.env.REACT_APP_ROOT_URL
+const baseUrl = `${rootUrl}/api/persons`
+console.log(`Set base url to ${baseUrl}`)
 
 const getAll = () => {
     return axios.get(baseUrl).then(response => response.data)

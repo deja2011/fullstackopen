@@ -29,7 +29,7 @@ const App = () => {
           setMessage({isError: false, text: `Updated person ${newPerson.name} to ${newNumber}`})
           setTimeout(() => setMessage(null), 5000)
         }).catch(error => {
-          setMessage({isError: true, text: `Failed to update person ${newPerson.name} to ${newNumber}`})
+          setMessage({isError: true, text: `Failed to update person ${newPerson.name}'s number to ${newNumber}: ${error.response.data.error}`})
           setTimeout(() => setMessage(null), 5000)
         })
         setNewName("")
@@ -46,7 +46,7 @@ const App = () => {
         setMessage({isError: false, text: `Created new person ${newName}`})
         setTimeout(() => setMessage(null), 5000)
       }).catch(error => {
-        setMessage({isError: true, text: `Failed to create new person ${newName}`})
+        setMessage({isError: true, text: `Failed to create new person ${newName}: ${error.response.data.error}`})
         setTimeout(() => setMessage(null), 5000)
       })
       setNewName("")
